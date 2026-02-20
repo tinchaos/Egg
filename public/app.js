@@ -1,0 +1,121 @@
+const chatEl = document.getElementById('chat');
+const formEl = document.getElementById('form');
+const inputEl = document.getElementById('message');
+const quickActionsEl = document.getElementById('quickActions');
+const planTextEl = document.getElementById('planText');
+const planFileEl = document.getElementById('planFile');
+const savePlanBtn = document.getElementById('savePlan');
+const adminTokenEl = document.getElementById('adminToken');
+
+let userName = '';
+
+function addMessage(text, sender = 'bot') {
+  const div = document.createElement('div');
+  div.className = `msg ${sender}`;
+  div.textContent = text;
+  chatEl.appendChild(div);
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+async function sendToBot(message) {
+  addMessage(message, 'user');
+  const loading = document.createElement('div');
+  loading.className = 'msg bot';
+  loading.textContent = 'Escribiendo...';
+  chatEl.appendChild(loading);
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, userName })
+    });
+
+    const data = await response.json();
+    loading.remove();
+    addMessage(data.reply || data.error || 'No pude responder en este momento.');
+  } catch (_error) {
+    loading.remove();
+    addMessage('Hubo un problema de conexión con el asistente.');
+  }
+}
+
+formEl.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  inputEl.value = '';
+
+  if (!userName) {
+    userName = text;
+    addMessage(text, 'user');
+    addMessage(`¡Mucho gusto, ${userName}! 👋\nSoy el asistente de Martín Urtasun para el plan de Product Owner de la Célula BIT.\n¿Querés contarme qué aspecto del plan te interesa o preferís que te sugiera opciones?`);
+    return;
+  }
+
+  await sendToBot(text);
+});
+
+quickActionsEl.addEventListener('click', async (e) => {
+  const button = e.target.closest('button');
+  if (!button) return;
+
+  if (!userName) {
+    addMessage('Antes de avanzar, contame tu nombre 😊');
+    return;
+  }
+
+  await sendToBot(button.dataset.question);
+});
+
+async function loadPlan() {
+  const response = await fetch('/api/plan');
+  const data = await response.json();
+  planTextEl.value = data.plan || '';
+}
+
+savePlanBtn.addEventListener('click', async () => {
+  const headers = { 'Content-Type': 'application/json' };
+  if (adminTokenEl.value.trim()) {
+    headers['x-admin-token'] = adminTokenEl.value.trim();
+  }
+
+  const response = await fetch('/api/plan', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ plan: planTextEl.value })
+  });
+
+  if (response.ok) {
+    addMessage('Plan actualizado correctamente. Ya uso esta nueva versión para responder ✅');
+  } else {
+    const data = await response.json();
+    addMessage(`No se pudo guardar el plan: ${data.error}`);
+  }
+});
+
+planFileEl.addEventListener('change', async () => {
+  const file = planFileEl.files?.[0];
+  if (!file) return;
+  const text = await file.text();
+  planTextEl.value = text;
+});
+
+function setupQR() {
+  const url = window.location.href;
+  document.getElementById('urlText').textContent = url;
+
+  // eslint-disable-next-line no-undef
+  new QRious({
+    element: document.getElementById('qr'),
+    value: url,
+    size: 150,
+    level: 'M'
+  });
+}
+
+addMessage('¡Hola! Soy el asistente del plan de trabajo de Martín para Product Owner de BIT. 👋');
+addMessage('Primero, ¿cómo te llamás?');
+setupQR();
+loadPlan();
