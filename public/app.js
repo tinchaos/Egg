@@ -50,7 +50,7 @@ formEl.addEventListener('submit', async (e) => {
   if (!userName) {
     userName = text;
     addMessage(text, 'user');
-    addMessage(`¡Mucho gusto, ${userName}! 👋\nSoy el asistente de Martín Urtasun para el plan de Product Owner de la Célula BIT.\n¿Querés contarme qué aspecto del plan te interesa o preferís que te sugiera opciones?`);
+    addMessage(`¡Mucho gusto, ${userName}! 👋\nPuedo mostrarte todo el plan, sugerirte opciones concretas o conversar sobre cualquier duda que te haya surgido.\nSi querés, contame qué aspecto te interesa y lo vemos juntos.`);
     return;
   }
 
@@ -102,20 +102,7 @@ planFileEl.addEventListener('change', async () => {
   planTextEl.value = text;
 });
 
-function setupQR() {
-  const url = window.location.href;
-  document.getElementById('urlText').textContent = url;
-
-  // eslint-disable-next-line no-undef
-  new QRious({
-    element: document.getElementById('qr'),
-    value: url,
-    size: 150,
-    level: 'M'
-  });
-}
 
 addMessage('¡Hola! Soy el asistente del plan de trabajo de Martín para Product Owner de BIT. 👋');
 addMessage('Primero, ¿cómo te llamás?');
-setupQR();
 loadPlan();

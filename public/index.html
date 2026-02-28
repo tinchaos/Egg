@@ -35,14 +35,11 @@
     </section>
 
     <aside class="panel">
-      <h2>Configuración rápida</h2>
-      <p>Compartí esta demo por URL o QR.</p>
-      <canvas id="qr"></canvas>
-      <p class="small" id="urlText"></p>
+      <h2>Actualizar plan</h2>
+      <p class="small">Pegá una nueva versión del plan y guardá para impactar al instante en las respuestas.</p>
 
-      <details>
-        <summary>Actualizar plan (editable)</summary>
-        <p class="small">Pegá una nueva versión del plan y guardá para impactar al instante en las respuestas.</p>
+      <details open>
+        <summary>Plan editable</summary>
         <textarea id="planText" rows="12"></textarea>
         <input id="adminToken" placeholder="ADMIN_TOKEN (si aplica)" />
         <button id="savePlan">Guardar plan</button>
@@ -54,7 +51,6 @@
     </aside>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

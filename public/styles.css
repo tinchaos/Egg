@@ -30,7 +30,6 @@ body { margin: 0; background: linear-gradient(120deg, #0a1014, #101f29); color: 
 .panel h2 { margin-top: 0; }
 .small { color: var(--subtle); font-size: .82rem; }
 textarea, #adminToken { width: 100%; background: #0b141a; color: var(--text); border: 1px solid #2a3942; border-radius: 8px; padding: .7rem; margin-bottom: .6rem; }
-#qr { width: 150px; height: 150px; background: #fff; padding: .4rem; border-radius: 10px; }
 .file-upload { display: inline-block; border: 1px dashed #2a3942; padding: .4rem .6rem; border-radius: 8px; cursor: pointer; font-size: .85rem; }
 .file-upload input { display: none; }
 
