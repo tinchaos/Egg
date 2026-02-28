@@ -1,5 +1,6 @@
 const { getPlan } = require('../lib/plan-store');
 const { buildSystemPrompt } = require('../lib/prompt');
+const { addInteraction } = require('../lib/interactions-store');
 
 function sendJson(res, status, data) {
   res.status(status).json(data);
@@ -24,6 +25,8 @@ module.exports = async function handler(req, res) {
     if (typeof message !== 'string' || !message.trim()) {
       return sendJson(res, 400, { error: 'Mensaje inválido.' });
     }
+
+    await addInteraction({ userName, question: message.trim() });
 
     const plan = await getPlan();
     const systemPrompt = buildSystemPrompt({ userName, plan });
