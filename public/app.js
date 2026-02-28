@@ -2,10 +2,6 @@ const chatEl = document.getElementById('chat');
 const formEl = document.getElementById('form');
 const inputEl = document.getElementById('message');
 const quickActionsEl = document.getElementById('quickActions');
-const planTextEl = document.getElementById('planText');
-const planFileEl = document.getElementById('planFile');
-const savePlanBtn = document.getElementById('savePlan');
-const adminTokenEl = document.getElementById('adminToken');
 
 let userName = '';
 
@@ -69,40 +65,5 @@ quickActionsEl.addEventListener('click', async (e) => {
   await sendToBot(button.dataset.question);
 });
 
-async function loadPlan() {
-  const response = await fetch('/api/plan');
-  const data = await response.json();
-  planTextEl.value = data.plan || '';
-}
-
-savePlanBtn.addEventListener('click', async () => {
-  const headers = { 'Content-Type': 'application/json' };
-  if (adminTokenEl.value.trim()) {
-    headers['x-admin-token'] = adminTokenEl.value.trim();
-  }
-
-  const response = await fetch('/api/plan', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ plan: planTextEl.value })
-  });
-
-  if (response.ok) {
-    addMessage('Plan actualizado correctamente. Ya uso esta nueva versión para responder ✅');
-  } else {
-    const data = await response.json();
-    addMessage(`No se pudo guardar el plan: ${data.error}`);
-  }
-});
-
-planFileEl.addEventListener('change', async () => {
-  const file = planFileEl.files?.[0];
-  if (!file) return;
-  const text = await file.text();
-  planTextEl.value = text;
-});
-
-
 addMessage('¡Hola! Soy el asistente del plan de trabajo de Martín para Product Owner de BIT. 👋');
 addMessage('Primero, ¿cómo te llamás?');
-loadPlan();
