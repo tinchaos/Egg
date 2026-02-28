@@ -98,7 +98,11 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 400, { error: 'Mensaje inválido.' });
       }
 
-      await addInteraction({ userName: body.userName, question: body.message.trim() });
+      try {
+        await addInteraction({ userName: body.userName, question: body.message.trim() });
+      } catch (_error) {
+        // logging no bloqueante
+      }
 
       const plan = await getPlan();
       const systemPrompt = buildSystemPrompt({ userName: body.userName, plan });
