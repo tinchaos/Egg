@@ -43,3 +43,5 @@ async function loadInteractions() {
 
 loadBtn.addEventListener('click', loadInteractions);
 loadInteractions();
+
+setInterval(loadInteractions, 5000);
