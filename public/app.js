@@ -1,7 +1,6 @@
 const chatEl = document.getElementById('chat');
 const formEl = document.getElementById('form');
 const inputEl = document.getElementById('message');
-const quickActionsEl = document.getElementById('quickActions');
 
 let userName = '';
 
@@ -53,17 +52,7 @@ formEl.addEventListener('submit', async (e) => {
   await sendToBot(text);
 });
 
-quickActionsEl.addEventListener('click', async (e) => {
-  const button = e.target.closest('button');
-  if (!button) return;
 
-  if (!userName) {
-    addMessage('Antes de avanzar, contame tu nombre 😊');
-    return;
-  }
-
-  await sendToBot(button.dataset.question);
-});
 
 addMessage('¡Hola! Soy el asistente del plan de trabajo de Martín para Product Owner de BIT. 👋');
 addMessage('Primero, ¿cómo te llamás?');
